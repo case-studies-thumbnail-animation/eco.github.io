@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fibonacci Golden Spiral</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  </head>
+  <body>
+    <script>
+      const CANVAS_WIDTH = 1000;
+      const CANVAS_HEIGHT = 1000;
+      let fibs = [1, 1];
+      let scaleFactor = 1;
+      let minScale;
+
+      function setup() {
+        createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+        angleMode(DEGREES);
+
+        stroke(255);
+        strokeWeight(2);
+        noFill();
+
+        // White glow effect
+        drawingContext.shadowBlur = 10;
+        drawingContext.shadowColor = 'white';
+
+        initFibs();
+        setMinScale();
+      }
+
+      function draw() {
+        background(20); // black background
+        translate(width / 2, height / 2); // center the drawing
+
+        for (let i = 0; i < fibs.length; i++) {
+          let s = fibs[i] * scaleFactor;
+
+          // Draw white square
+          rect(0, 0, s, s);
+
+          // Draw golden arc (quarter-circle)
+          arc(s, 0, s * 2, s * 2, 90, 180);
+
+          // Move & rotate to next square
+          translate(s, s);
+          rotate(-90);
+        }
+
+        if (scaleFactor <= minScale) {
+          fibs = [1, 1];
+          initFibs();
+          scaleFactor = 1;
+        } else {
+          scaleFactor *= 0.99;
+        }
+      }
+
+      function initFibs() {
+        for (let i = 2; i < 25; i++) {
+          fibs[i] = fibs[i - 1] + fibs[i - 2];
+        }
+      }
+
+      function setMinScale() {
+        const n = fibs.length;
+        minScale = fibs[n - 5] / fibs[n - 1];
+      }
+    </script>
+  </body>
+</html>
